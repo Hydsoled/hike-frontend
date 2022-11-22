@@ -11,23 +11,34 @@ import {DashboardComponent} from "./dashboard/dashboard.component";
 import {AuthComponent} from "./auth/auth.component";
 import {AuthService} from "./auth/auth.service";
 import {AuthGuard} from "./auth-guard.service";
+import {FormsModule} from "@angular/forms";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
+import {AuthIntercept} from "./auth.intercept";
+import {LoadingComponent} from "./shared/loading/loading.component";
 
 @NgModule({
   declarations: [
     AdminComponent,
     DashboardComponent,
-    AuthComponent
+    AuthComponent,
+    LoadingComponent
   ],
-  imports: [
-    AdminRoutingModule,
-    CommonModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatSidenavModule,
-    MatIconModule,
-    MatListModule,
+    imports: [
+        HttpClientModule,
+        AdminRoutingModule,
+        CommonModule,
+        MatToolbarModule,
+        MatButtonModule,
+        MatSidenavModule,
+        MatIconModule,
+        MatListModule,
+        FormsModule,
+    ],
+  providers: [
+    {provide: HTTP_INTERCEPTORS, useClass: AuthIntercept, multi: true},
+    AuthService,
+    AuthGuard
   ],
-  providers: [AuthService, AuthGuard],
   exports: [AdminRoutingModule],
 })
 export class AdminModule{
