@@ -28,6 +28,8 @@ import {MatInputModule} from "@angular/material/input";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatNativeDateModule} from "@angular/material/core";
+import {MatChipsModule} from "@angular/material/chips";
+import {MatRadioModule} from "@angular/material/radio";
 
 @NgModule({
   declarations: [
@@ -56,6 +58,8 @@ import {MatNativeDateModule} from "@angular/material/core";
     MatPaginatorModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatChipsModule,
+    MatRadioModule,
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: AuthIntercept, multi: true},
