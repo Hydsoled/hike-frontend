@@ -1,16 +1,16 @@
 import {HttpHandler, HttpInterceptor, HttpRequest} from "@angular/common/http";
-import {AuthService} from "./auth/auth.service";
 import {Injectable} from "@angular/core";
 import {exhaustMap, take} from "rxjs";
+import {UserService} from "./shared/user/user.service";
 
 @Injectable()
 export class AuthIntercept implements HttpInterceptor {
 
-  constructor(private authService: AuthService) {
+  constructor(private userService: UserService) {
   }
 
   intercept(req: HttpRequest<any>, next: HttpHandler){
-    return this.authService.user.pipe(
+    return this.userService.user.pipe(
       take(1),
       exhaustMap(user => {
         if (!user) {
@@ -18,7 +18,7 @@ export class AuthIntercept implements HttpInterceptor {
         }
         const addAuth = req.clone({
           setHeaders: {
-            authorization: 'Bearer ' + this.authService.token,
+            authorization: 'Bearer ' + this.userService.token,
           }
         });
         return next.handle(addAuth);
