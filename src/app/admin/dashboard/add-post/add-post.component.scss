@@ -1,7 +1,8 @@
 .container{
   margin-top: 50px;
+  margin-bottom: 50px;
 }
-.tags {
+mat-form-field {
   margin-top: 20px;
   width: 70%;
 }
@@ -13,4 +14,8 @@
   align-content: center;
   align-items: center;
   height: 60px;
+}
+:host ::ng-deep .ck-editor__editable_inline {
+  min-height: 500px;
+  margin-bottom: 20px;
 }

@@ -19,6 +19,11 @@ export class DashboardComponent implements OnInit, OnDestroy{
     private userService: UserService,
   ) {}
 
+  isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
+    .pipe(
+      map(result => result.matches),
+      shareReplay()
+    );
   ngOnInit() {
     this.userService
       .user
@@ -30,11 +35,6 @@ export class DashboardComponent implements OnInit, OnDestroy{
       )
   }
 
-  isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
-    .pipe(
-      map(result => result.matches),
-      shareReplay()
-    );
   ngOnDestroy() {
     this.$destroy.next(true);
     this.$destroy.complete();

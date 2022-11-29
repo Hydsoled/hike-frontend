@@ -1,30 +1,59 @@
-import { Component } from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {MatChipEditedEvent, MatChipInputEvent} from "@angular/material/chips";
 import {COMMA, ENTER} from "@angular/cdk/keycodes";
 import {NgForm} from "@angular/forms";
+import * as customEditor from "src/app/lib/ckeditor/build/ckeditor";
+import {AddPostService} from "./add-post.service";
+import {ReplaySubject, takeUntil} from "rxjs";
 export interface Tag {
   name: string;
+}
+
+export interface AddPost {
+  title: string;
+  area: string;
+  image: File;
+  tags: string[];
+  body: string;
 }
 @Component({
   selector: 'app-add-post',
   templateUrl: './add-post.component.html',
   styleUrls: ['./add-post.component.scss']
 })
-export class AddPostComponent {
-  addOnBlur = true;
-  areaValue: 'world' | 'georgia' | 'interview' | 'blog' = 'world';
-  readonly separatorKeysCodes = [ENTER, COMMA] as const;
+export class AddPostComponent implements OnDestroy{
+  private $destroy: ReplaySubject<boolean> = new ReplaySubject(1);
+  image!: File;
   tags: Tag[] = [];
+  areaValue: 'world' | 'georgia' | 'interview' | 'blog' = 'world';
+  addPostData: AddPost = {title: '', body: '', area: '', tags: [], image: this.image};
+  readonly separatorKeysCodes = [ENTER, COMMA] as const;
+  Editor = customEditor;
+  addOnBlur = true;
+  editorData = '';
   imageName: string = 'სურათი არ არის ატვირთული';
-  file: any;
+
+  constructor(private addPostService: AddPostService) {
+  }
 
   addPost(form: NgForm){
-    console.log(form);
+    this.addPostData.title = form.form.value.title;
+    this.addPostData.area = form.form.value.area;
+    this.addPostData.image = this.image;
+    this.addPostData.body = this.editorData;
+    this.tags.forEach((obj)=>{
+      this.addPostData.tags.push(obj.name);
+    });
+    this.addPostService.addPost(this.addPostData)
+      .pipe(takeUntil(this.$destroy))
+      .subscribe((val)=>{
+        console.log(val);
+      });
   }
 
   uploadImage(fileInputEvent: any) {
-    this.file = fileInputEvent.target.files[0];
-    this.imageName = this.file.name;
+    this.image = fileInputEvent.target.files[0];
+    this.imageName = this.image.name;
   }
 
   addTag(event: MatChipInputEvent): void {
@@ -53,5 +82,10 @@ export class AddPostComponent {
     if (index > 0) {
       this.tags[index].name = value;
     }
+  }
+
+  ngOnDestroy() {
+    this.$destroy.next(true);
+    this.$destroy.complete();
   }
 }

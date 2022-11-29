@@ -1,1 +1,51 @@
-<p>add-category works!</p>
+<div class="container">
+  <form (ngSubmit)="addCategory(form)" #form="ngForm">
+    <mat-form-field>
+      <mat-label>სათაური</mat-label>
+      <input
+        ngModel
+        id="title"
+        name="title"
+        type="text"
+        matInput
+        required
+      />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>აღწერა</mat-label>
+      <textarea
+        ngModel
+        id="description"
+        name="description"
+        type="text"
+        matInput
+        required
+      ></textarea>
+    </mat-form-field>
+    <section class="area-section">
+      <label class="area-margin">მთავარი კატეგორია:</label>
+      <mat-radio-group ngModel name="area" required [(ngModel)]="areaValue">
+        <mat-radio-button class="area-margin" value="world">მსოფლიო</mat-radio-button>
+        <mat-radio-button class="area-margin" value="georgia">საქართველო</mat-radio-button>
+        <mat-radio-button class="area-margin" value="interview">ინტერვიუ</mat-radio-button>
+        <mat-radio-button class="area-margin" value="blog">ბლოგი</mat-radio-button>
+      </mat-radio-group>
+    </section>
+    <div style="margin-bottom: 20px;">
+      <input
+        ngModel
+        id="image"
+        name="image"
+        style="display: none"
+        #imageInput
+        type="file"
+        required
+        (change)="uploadImage($event)"/>
+      <button mat-flat-button color="primary" type="button" (click)="imageInput.click()">აირჩიე სურათი</button>
+      <span>{{imageName}}</span>
+    </div>
+    <div>
+      <button [disabled]="!form.form.valid" type="submit" mat-flat-button color="primary" >დამატება</button>
+    </div>
+  </form>
+</div>

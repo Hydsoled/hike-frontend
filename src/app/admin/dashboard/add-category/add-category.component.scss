@@ -1,0 +1,21 @@
+.container{
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+mat-form-field {
+  margin-top: 20px;
+  width: 70%;
+}
+.area-margin {
+  margin: 0 10px;
+}
+.area-section {
+  display: flex;
+  align-content: center;
+  align-items: center;
+  height: 60px;
+}
+:host ::ng-deep .ck-editor__editable_inline {
+  min-height: 500px;
+  margin-bottom: 20px;
+}
