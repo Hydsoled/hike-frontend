@@ -6,7 +6,7 @@ import {DashboardComponent} from "./dashboard/dashboard.component";
 import {AuthComponent} from "./auth/auth.component";
 import {AuthService} from "./auth/auth.service";
 import {AuthGuard} from "./auth-guard.service";
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {LoadingComponent} from "./shared/loading/loading.component";
 import {DashboardService} from "./dashboard/dashboard.service";
 import {PostTableComponent} from "./dashboard/post-table/post-table.component";
@@ -19,6 +19,8 @@ import {AddPostService} from "./dashboard/add-post/add-post.service";
 import {AddCategoryService} from "./dashboard/add-category/add-category.service";
 import {CategoryTableService} from "./dashboard/category-table/category-table.service";
 import {CategoryTableComponent} from "./dashboard/category-table/category-table.component";
+import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import {ImageFilter} from "./shared/filters/image.filter";
 
 @NgModule({
   declarations: [
@@ -38,6 +40,8 @@ import {CategoryTableComponent} from "./dashboard/category-table/category-table.
     AdminRoutingModule,
     CommonModule,
     FormsModule,
+    MatAutocompleteModule,
+    ReactiveFormsModule,
   ],
   providers: [
     AuthService,
@@ -45,7 +49,8 @@ import {CategoryTableComponent} from "./dashboard/category-table/category-table.
     DashboardService,
     AddPostService,
     AddCategoryService,
-    CategoryTableService
+    CategoryTableService,
+    ImageFilter
   ],
   exports: [AdminRoutingModule],
 })

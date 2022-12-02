@@ -23,6 +23,20 @@
         <mat-radio-button class="area-margin" value="blog">ბლოგი</mat-radio-button>
       </mat-radio-group>
     </section>
+    <mat-form-field appearance="fill">
+      <mat-label>კატეგორია</mat-label>
+      <input type="text"
+             placeholder="მაგალითად: თბილისი"
+             aria-label="category"
+             matInput
+             [formControl]="myControl"
+             [matAutocomplete]="auto">
+      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="categorySelected($event.option.value)">
+        <mat-option *ngFor="let option of categories" [value]="option.name">
+          {{option.name}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
     <div>
       <input
         ngModel

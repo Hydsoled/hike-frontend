@@ -8,6 +8,7 @@ import {GlobalPostService} from "./shared/global-post.service";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {AuthIntercept} from "./admin/auth.intercept";
 import {UserService} from "./admin/shared/user/user.service";
+import {GlobalCategoryService} from "./shared/global-category.service";
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import {UserService} from "./admin/shared/user/user.service";
     {provide: HTTP_INTERCEPTORS, useClass: AuthIntercept, multi: true},
     UserService,
     GlobalPostService,
+    GlobalCategoryService
   ],
   bootstrap: [AppComponent]
 })

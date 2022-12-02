@@ -14,6 +14,9 @@ export class AddPostService {
     formData.append('area', addPostData.area);
     formData.append('image', addPostData.image);
     formData.append('body', addPostData.body);
+    for (let k in addPostData.bodyImages){
+      formData.append('bodyImages', addPostData.bodyImages[k]);
+    }
     return this.http.post('http://localhost:3000/post', formData)
   }
 }
