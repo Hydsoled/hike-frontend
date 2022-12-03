@@ -7,6 +7,7 @@ import {AddPostService} from "./add-post.service";
 import {mergeMap, ReplaySubject, startWith, takeUntil} from "rxjs";
 import {GlobalCategoryService} from "../../../shared/global-category.service";
 import {ImageFilter} from "../../shared/filters/image.filter";
+import {ActivatedRoute, Data} from "@angular/router";
 
 export interface Tag {
   name: string;
@@ -44,10 +45,16 @@ export class AddPostComponent implements OnInit, OnDestroy{
     private addPostService: AddPostService,
     private globalCategoryService: GlobalCategoryService,
     private imageFilter: ImageFilter,
+    private route: ActivatedRoute,
   ) {
   }
 
   ngOnInit() {
+    this.route.data
+      .pipe(takeUntil(this.$destroy))
+      .subscribe((data: Data)=>{
+        console.log(data);
+      });
     this.myControl.valueChanges.pipe(
       startWith(''),
       takeUntil(this.$destroy),

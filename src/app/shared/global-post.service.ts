@@ -17,4 +17,8 @@ export class GlobalPostService {
       params: params,
     });
   }
+
+  getOnePost(id: number) {
+    return this.http.get('http://localhost:3000/post/' + id);
+  }
 }

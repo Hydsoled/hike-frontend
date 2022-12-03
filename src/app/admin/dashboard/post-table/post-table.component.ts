@@ -4,6 +4,7 @@ import {ReplaySubject, takeUntil} from "rxjs";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatTableDataSource} from "@angular/material/table";
 import {map} from "rxjs/operators";
+import {ActivatedRoute, Router} from "@angular/router";
 
 export interface Post {
   id: string;
@@ -28,8 +29,11 @@ export class PostTableComponent implements OnInit, OnDestroy, AfterViewInit {
   dataSource = new MatTableDataSource<Post>();
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   private $destroy: ReplaySubject<boolean> = new ReplaySubject(1);
-  clickedRows = new Set<Post>();
-  constructor(private globalPostService: GlobalPostService) {
+  constructor(
+    private globalPostService: GlobalPostService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {
   }
 
   ngOnInit(): void {
@@ -71,6 +75,10 @@ export class PostTableComponent implements OnInit, OnDestroy, AfterViewInit {
     this.filterValues.size = data.pageSize;
     this.filterValues.index = data.pageIndex;
     this.filterChange();
+  }
+
+  onPostClick(row: Post){
+    this.router.navigate(['add-post', row.id], {relativeTo: this.route});
   }
 
   ngAfterViewInit() {

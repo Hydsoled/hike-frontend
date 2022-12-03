@@ -19,8 +19,8 @@ import {AddPostService} from "./dashboard/add-post/add-post.service";
 import {AddCategoryService} from "./dashboard/add-category/add-category.service";
 import {CategoryTableService} from "./dashboard/category-table/category-table.service";
 import {CategoryTableComponent} from "./dashboard/category-table/category-table.component";
-import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {ImageFilter} from "./shared/filters/image.filter";
+import {AddPostResolver} from "./dashboard/add-post/add-post.resolver";
 
 @NgModule({
   declarations: [
@@ -40,7 +40,6 @@ import {ImageFilter} from "./shared/filters/image.filter";
     AdminRoutingModule,
     CommonModule,
     FormsModule,
-    MatAutocompleteModule,
     ReactiveFormsModule,
   ],
   providers: [
@@ -50,7 +49,8 @@ import {ImageFilter} from "./shared/filters/image.filter";
     AddPostService,
     AddCategoryService,
     CategoryTableService,
-    ImageFilter
+    ImageFilter,
+    AddPostResolver
   ],
   exports: [AdminRoutingModule],
 })
