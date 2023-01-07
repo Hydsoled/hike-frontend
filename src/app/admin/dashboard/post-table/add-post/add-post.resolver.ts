@@ -1,6 +1,6 @@
 import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from "@angular/router";
-import {Post} from "../post-table/post-table.component";
-import {GlobalPostService} from "../../../shared/global-post.service";
+import {Post} from "../post-table.component";
+import {GlobalPostService} from "../../../../shared/global-post.service";
 import {Injectable} from "@angular/core";
 
 @Injectable()

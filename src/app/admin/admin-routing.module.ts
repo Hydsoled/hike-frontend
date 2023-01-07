@@ -4,11 +4,11 @@ import {AuthComponent} from "./auth/auth.component";
 import {DashboardComponent} from "./dashboard/dashboard.component";
 import {AuthGuard} from "./auth-guard.service";
 import {PostTableComponent} from "./dashboard/post-table/post-table.component";
-import {AddPostComponent} from "./dashboard/add-post/add-post.component";
-import {AddCategoryComponent} from "./dashboard/add-category/add-category.component";
+import {AddPostComponent} from "./dashboard/post-table/add-post/add-post.component";
+import {AddCategoryComponent} from "./dashboard/category-table/add-category/add-category.component";
 import {UserComponent} from "./dashboard/user/user.component";
 import {CategoryTableComponent} from "./dashboard/category-table/category-table.component";
-import {AddPostResolver} from "./dashboard/add-post/add-post.resolver";
+import {AddPostResolver} from "./dashboard/post-table/add-post/add-post.resolver";
 
 const routes: Routes = [
   {path: 'auth', component: AuthComponent},

@@ -43,28 +43,22 @@ export class CategoryTableComponent implements OnInit, OnDestroy, AfterViewInit{
       .getCategoryByQuery(this.filterValues)
       .pipe(
         takeUntil(this.$destroy),
-        map((data: any) => {
-          const modifyData: any = {};
-          modifyData.data= data[0];
-          modifyData.total = data[1];
-          return modifyData;
-        })
       )
       .subscribe(
-        (posts: any) => {
-          const data = [];
-          for (const val in posts.data){
-            data.push({
-              id: posts.data[val].c_id,
-              title: posts.data[val].c_title,
-              area: posts.data[val].c_area,
-              createdAt: posts.data[val].c_createdAt,
-              updatedAt: posts.data[val].c_updatedAt,
-              user: posts.data[val].firstName + ' ' + posts.data[val].lastName,
+        (data: any) => {
+          const categories = [];
+          for (const category of data.category){
+            categories.push({
+              id: category.category_id,
+              title: category.category_title,
+              area: category.category_area,
+              createdAt: category.category_createdAt,
+              updatedAt: category.category_updatedAt,
+              user: category.firstName + ' ' + category.lastName,
             });
           }
-          this.length = posts.total;
-          this.dataSource = new MatTableDataSource(data);
+          this.length = data.count;
+          this.dataSource = new MatTableDataSource(categories);
         }
       );
   }

@@ -5,40 +5,52 @@ import {FormControl, NgForm} from "@angular/forms";
 import * as customEditor from "src/app/lib/ckeditor/build/ckeditor";
 import {AddPostService} from "./add-post.service";
 import {mergeMap, ReplaySubject, startWith, takeUntil} from "rxjs";
-import {GlobalCategoryService} from "../../../shared/global-category.service";
-import {ImageFilter} from "../../shared/filters/image.filter";
-import {ActivatedRoute, Data} from "@angular/router";
+import {GlobalCategoryService} from "../../../../shared/global-category.service";
+import {ImageFilter} from "../../../shared/filters/image.filter";
+import {ActivatedRoute, Data, Router} from "@angular/router";
 
 export interface Tag {
+  name: string;
+}
+export interface Category {
+  id: number;
   name: string;
 }
 
 export interface AddPost {
   title: string;
-  area: string;
+  area: 'world' | 'georgia' | 'interview' | 'blog';
   category: number;
   image: File;
   tags: string[];
   body: string;
   bodyImages: [];
 }
+
 @Component({
   selector: 'app-add-post',
   templateUrl: './add-post.component.html',
   styleUrls: ['./add-post.component.scss']
 })
-export class AddPostComponent implements OnInit, OnDestroy{
+export class AddPostComponent implements OnInit, OnDestroy {
   private $destroy: ReplaySubject<boolean> = new ReplaySubject(1);
+  readonly separatorKeysCodes = [ENTER, COMMA] as const;
+  postId: number = 0;
   myControl = new FormControl('');
-  categories: {name: string, id: number}[] = [];
+  categories: Category[] = [];
   image!: File;
   tags: Tag[] = [];
-  areaValue: 'world' | 'georgia' | 'interview' | 'blog' = 'world';
-  addPostData: AddPost = {title: '', body: '', area: '', category: 0, tags: [], image: this.image, bodyImages: []};
-  readonly separatorKeysCodes = [ENTER, COMMA] as const;
+  addPostData: AddPost = {
+    title: '',
+    area: 'world',
+    category: 0,
+    image: this.image,
+    tags: [],
+    body: '',
+    bodyImages: [],
+  };
   Editor = customEditor;
   addOnBlur = true;
-  editorData = '';
   imageName: string = 'სურათი არ არის ატვირთული';
 
   constructor(
@@ -46,14 +58,27 @@ export class AddPostComponent implements OnInit, OnDestroy{
     private globalCategoryService: GlobalCategoryService,
     private imageFilter: ImageFilter,
     private route: ActivatedRoute,
+    private router: Router,
   ) {
   }
 
   ngOnInit() {
     this.route.data
       .pipe(takeUntil(this.$destroy))
-      .subscribe((data: Data)=>{
-        console.log(data);
+      .subscribe((data: Data) => {
+        const post = data['post'];
+        if (post) {
+          this.postId = post.id;
+          this.addPostData.title = post.title;
+          this.addPostData.body = post.body;
+          this.addPostData.area = post.area;
+          if (post.category){
+            this.addPostData.category =post.category.id;
+          }
+          post.tag.forEach((tag: any) => {
+            this.tags.push({name: tag.name});
+          });
+        }
       });
     this.myControl.valueChanges.pipe(
       startWith(''),
@@ -64,26 +89,24 @@ export class AddPostComponent implements OnInit, OnDestroy{
         filters.size = 3;
         return this.globalCategoryService.getCategoryByQuery(filters);
       }),
-    ).subscribe((val: any)=>{
+    ).subscribe((val: any) => {
       this.categories = [];
-      val[0].forEach((category: any)=>{
-        this.categories.push({id: category.c_id, name: category.c_title});
+      val.category.forEach((category: any) => {
+        this.categories.push({id: category.category_id, name: category.category_title});
       })
     });
   }
 
-  addPost(form: NgForm){
+  addPost(form: NgForm) {
     this.addPostData.title = form.form.value.title;
     this.addPostData.area = form.form.value.area;
+    this.addPostData.tags = this.tags.map((tag)=> tag.name);
     this.addPostData.image = this.image;
-    [this.addPostData.bodyImages, this.addPostData.body] = this.imageFilter.extractImageFromBody(this.editorData, this.addPostData.title);
-    this.tags.forEach((obj)=>{
-      this.addPostData.tags.push(obj.name);
-    });
+    [this.addPostData.bodyImages, this.addPostData.body] = this.imageFilter.extractImageFromBody(this.addPostData.body, this.addPostData.title);
     this.addPostService.addPost(this.addPostData)
       .pipe(takeUntil(this.$destroy))
-      .subscribe((val)=>{
-        console.log(val);
+      .subscribe((val) => {
+        this.router.navigate(['/admin/dashboard']);
       });
   }
 
@@ -120,13 +143,22 @@ export class AddPostComponent implements OnInit, OnDestroy{
     }
   }
 
+  categorySelected(option: string) {
+    const category = this.categories.filter(category => category.name === option);
+    this.addPostData.category = category[0].id;
+  }
+
+  deletePost(id: number){
+    this.addPostService
+      .deletePost(id)
+      .pipe(takeUntil(this.$destroy))
+      .subscribe((data)=>{
+        this.router.navigate(['/admin/dashboard']);
+    });
+  }
+
   ngOnDestroy() {
     this.$destroy.next(true);
     this.$destroy.complete();
-  }
-
-  categorySelected(option: string){
-    const category = this.categories.filter(category => category.name === option);
-    this.addPostData.category = category[0].id;
   }
 }

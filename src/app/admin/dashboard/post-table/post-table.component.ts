@@ -45,28 +45,22 @@ export class PostTableComponent implements OnInit, OnDestroy, AfterViewInit {
       .getPostByQuery(this.filterValues)
       .pipe(
         takeUntil(this.$destroy),
-        map((data: any) => {
-          const modifyData: any = {};
-          modifyData.data= data[0];
-          modifyData.total = data[1];
-          return modifyData;
-        })
       )
       .subscribe(
-        (posts: any) => {
-          const data = [];
-          for (const val in posts.data){
-            data.push({
-              id: posts.data[val].p_id,
-              title: posts.data[val].p_title,
-              area: posts.data[val].p_area,
-              createdAt: posts.data[val].p_createdAt,
-              updatedAt: posts.data[val].p_updatedAt,
-              user: posts.data[val].firstName + ' ' + posts.data[val].lastName,
+        (data: any) => {
+          const posts = [];
+          for (const post of data.post){
+            posts.push({
+              id: post.p_id,
+              title: post.p_title,
+              area: post.p_area,
+              createdAt: post.p_createdAt,
+              updatedAt: post.p_updatedAt,
+              user: post.firstName + ' ' + post.lastName,
             });
           }
-          this.length = posts.total;
-          this.dataSource = new MatTableDataSource(data);
+          this.length = data.count;
+          this.dataSource = new MatTableDataSource(posts);
         }
       );
   }
